@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath Amazing_109_1 Amazing_109_1.wsgi
