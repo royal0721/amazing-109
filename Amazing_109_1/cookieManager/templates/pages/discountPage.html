@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>客戶購買資料</title>
+    <link href="/cookieManager/stylesheet/pages/index.css" type="text/css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap" rel="stylesheet"></head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">    
+    <body>
+        <body style="overflow-y:scroll;background-color: rgb(250, 250, 250);">
+            <h2 style="position: absolute;left: 60px;
+            top:50px;font-size: 18px;color:whitesmoke;">管理員{{ ctx.username}}已登入</h2>
+            <div class="Amazing_top" style="background: #696969;display: flex;"><h1 style="margin:20px auto;width:10%;font-family: 'Open Sans', sans-serif;color:white;padding:28px;">Amazing</h1></div>
+            <button id="logout" style="background-color: #fff;color:rgb(133, 133, 133);position: absolute;right: 60px;top:50px;width:100px;height: 40px;font-size:18px;cursor: pointer;">登出</button>    <div style="display:flex;margin: 90px auto;width:42%;"><button class="btn" id="customer" style="background-color: #EAEAEA;color:#786B6B;font-family: 'Open Sans', sans-serif;font-size: 22px;border-radius: 5px;border: none;padding:8px 25px;margin-right: 50px;margin-left: 20px;">顧客行銷管理</button><button class="btn" id="discount" style="background-color: #EAEAEA;color:#786B6B;font-family: 'Open Sans', sans-serif;font-size: 22px;border-radius: 5px;border: none;padding:8px 25px;margin-right: 50px;margin-left: 20px;">客戶購買資料</button><button class="btn" id="check_inventory" style="background-color: #EAEAEA;color:#786B6B;font-family: 'Open Sans', sans-serif;font-size: 22px;border-radius: 5px;border: none;padding:8px 25px;">存貨追蹤管理</button></div>
+    <div style="width:60%;margin:50px auto;">
+
+</div>       
+<div style="margin-left: 8%;display: flex;">
+    <div id="top">
+            <p style="color:rgb(70, 70, 70)">產品名稱</p>
+            <div id="name_list" style="margin-left: 30px;width:200px;">
+            </div></div>
+            <div style="display: flex;">
+            <div id="loader">
+                
+            <img src="/static/Pepperidge_Farm_Milano.png" style="width: 200px; height:auto;margin-left: 180px;">
+            </div>
+            <div>
+            <div id="product_name" style="margin-left: 60px;margin-top:20px;font-size: 25px;color: #3d3d3d;">Pepperidge Farm Milano</div>
+            <div id="price" style="margin-left: 60px;margin-top:30px;font-size: 25px;color: #b94242;">新台幣 300 元 </div>
+        </div>
+    </div>
+</div>
+    <div id="bottom" style="margin:80px auto;width:40%;">
+        <table id="example" class="display compact" style="width:100%">
+            <thead>
+                <tr>
+                    <th>大戶 ID</th>
+                    <th>批量時間</th>
+                    <th>購買數量</th>
+                    <th>評論</th>
+                </tr>
+            </thead>
+            <tbody id="tbody1">
+                <!-- <tr>
+                    <td>Tiger Nixon</td>
+                    <td>2011/04/25</td>
+                    <td>101</td>
+                    <td>101-200</td>
+                    <td>29</td>
+                </tr>
+                <tr>
+                    <td>Garrett Winters</td>
+                    <td>2011/07/25</td>
+                    <td>123</td>
+                    <td>101-200</td>
+                    <td>29</td>
+                </tr>
+                <tr>
+                    <td>Ashton Cox</td>
+                    <td>2009/01/12</td>
+                    <td>112</td>
+                    <td>101-200</td>
+                    <td>29</td>
+                </tr>
+                <tr>
+                    <td>Cedric Kelly</td>
+                    <td>2012/03/29</td>
+                    <td>234</td>
+                    <td>201-300</td>
+                    <td>27</td>
+                </tr> -->
+        </table>
+    </div>    
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<script>
+    $('#example').DataTable();
+    $('#discount').css('box-shadow', '3px 3px #a0a0a0');
+    $('#customer').click(function() {
+        $(this).css('box-shadow', '3px 3px #a0a0a0');
+        $('#discount').css('box-shadow', '');
+        $('#check_inventory').css('box-shadow', '');
+        window.location.href='/crmPage';
+    });
+    $('#discount').click(function() {
+        $('#customer').css('box-shadow', '');
+        $(this).css('box-shadow', '3px 3px #a0a0a0');
+        $('#check_inventory').css('box-shadow', '');
+        window.location.href="/discountPage";
+    });   
+    $('#check_inventory').click(function() {
+        $('#customer').css('box-shadow', '');
+        $('#discount').css('box-shadow', '');
+        $(this).css('box-shadow', '3px 3px #a0a0a0');
+        window.location.href="/inventoryPage";
+    });  
+    
+    var table = $('#example').DataTable();
+    // use API to get JSON 
+    var List1 = {{ productList| safe }};
+    var List2 = {{ purchaseInfo| safe }};
+    var List3 = {{ customerList | safe }};
+    var productList = JSON.parse(List1);
+    var purchaseInfo = JSON.parse(List2);
+    var customerList = JSON.parse(List3);
+    // the variables that will show in frontend
+    var customerName = '';
+   
+    productList.forEach(element=>{
+        product=element.ProductName;
+        $('#name_list').append('<div style="margin-bottom:10px;"><a class="nav_text" href="#" style="text-decoration:none;color: rgb(105, 105, 105);width:200px;">'+product+'</a></div>')
+        
+    })
+
+    // iterate to find purchaseInfo where ID = 10001
+
+    $('td').css('padding', '10px');
+    $('th').css('padding', '10px');
+    $('#logout').click(function() {
+        window.location.href="/logout";
+    });  
+    
+    purchaseInfo.forEach(element => {
+        if(element.ProductID==10002){
+            customerList.forEach(element1 => {
+                if (element1.CustomerID == element.CustomerID){
+                    customerName = element1.CustomerName;
+                }
+            });
+            
+            table.row.add([customerName, element.Date,element.PurchaseQuantity,element.Comment,]).draw();
+            var dataTable =
+                ('<tr>' +
+                    '<td>' + customerName + '</td>' +
+                    '<td>' + element.Date + '</td>' +
+                    '<td>' + element.PurchaseQuantity + '</td>' +
+                    '<td>' + element.Comment + '</td>' +
+                '</tr>');
+            //console.log(dataTable);
+            //$('#tbody1').append(dataTable);
+
+        } 
+    });
+
+    $('.nav_text').on("click",function(){
+        table.clear().draw();
+        
+        var product_name =  $(this).text();
+
+        var name_with_dash;
+        if(product_name.slice(-1)==" "){
+            name_with_dash=product_name.split(' ').join('_').slice(0,-1);
+        }else{
+            name_with_dash=product_name.split(' ').join('_');
+        }
+        var name="/static/"+name_with_dash+".png";
+        $('img').attr('src',name);
+        console.log(name_with_dash);
+        document.getElementById('product_name').innerHTML = product_name;
+        productList.forEach(element => {
+            if ((element.ProductName) == (product_name)){
+                document.getElementById('price').innerHTML='新台幣 '+element.ProductPrice+' 元';
+                //var pro_id=element.ProductID;
+                
+                purchaseInfo.forEach(element1 => {
+                    var currCId = element1.CustomerID;
+                    var currPId = element1.ProductID;
+                    // if(pro_id==element.ProductID){
+                    //     quantity = element.PurchaseQuantity
+                    //     price = element.PurchasePrice;
+                    // }if (quantity <= 5) {
+                    //     price = price * 0.95;
+                    //     range = '0 ~ 50';
+                    // } else if (quantity <= 10) {
+                    //     price = price * 0.87;
+                    //     range = '51 ~ 100';
+                    // } else {
+                    //     price = price * 0.75;
+                    //     range = '100 up';
+                    // }
+                    customerList.forEach(element2 => {
+                        if (element2.CustomerID == currCId){
+                            customerName = element2.CustomerName;
+                        }
+                    });
+
+                    if (currPId == element.ProductID) {
+                        table.row.add([customerName, element1.Date, element1.PurchaseQuantity, element1.Comment,]).draw();
+                        var dataTable =
+                            ('<tr>' +
+                                '<td>' + customerName + '</td>' +
+                                '<td>' + element1.Date + '</td>' +
+                                '<td>' + element1.PurchaseQuantity + '</td>' +
+                                '<td>' + element1.Comment + '</td>' +
+                                '</tr>');
+                    }
+                    // table.row.add([customerName, element.Date, quantity,range,price]).draw();
+                    // var dataTable =
+                    //     ('<tr>' +
+                    //         '<td>' + customerName + '</td>' +
+                    //         '<td>' + element.Date + '</td>' +
+                    //         '<td>' + quantity + '</td>' +
+                    //         '<td>' + range + '</td>' +
+                    //         '<td>' + price + '</td>' +
+                    //     '</tr>');
+                    
+                });
+            //console.log(dataTable);
+            //$('#tbody1').append(dataTable);
+            }
+            
+        
+        });
+            
+                
+        
+    });
+    
+</script>
+
+</html>

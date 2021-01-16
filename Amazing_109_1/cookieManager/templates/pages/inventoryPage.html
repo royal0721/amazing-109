@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>存貨追蹤管理</title>
+    <link href="/cookieManager/stylesheet/pages/index.css" type="text/css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap" rel="stylesheet"></head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">    
+    <body>
+        <body style="overflow-y:scroll;background-color: rgb(250, 250, 250);">
+            <h2 style="position: absolute;left: 60px;
+            top:50px;font-size: 18px;color:whitesmoke;">管理員{{ ctx.username}}已登入</h2>
+            <div class="Amazing_top" style="background: #696969;display: flex;"><h1 style="margin:20px auto;width:10%;font-family: 'Open Sans', sans-serif;color:white;padding:28px;">Amazing</h1></div>
+            <button id="logout" style="background-color: #fff;color:rgb(133, 133, 133);position: absolute;right: 60px;top:50px;width:100px;height: 40px;font-size:18px;cursor: pointer;">登出</button>    <div style="display:flex;margin: 90px auto;width:42%;"><button class="btn" id="customer" style="background-color: #EAEAEA;color:#786B6B;font-family: 'Open Sans', sans-serif;font-size: 22px;border-radius: 5px;border: none;padding:8px 25px;margin-right: 50px;margin-left: 20px;">顧客行銷管理</button><button class="btn" id="discount" style="background-color: #EAEAEA;color:#786B6B;font-family: 'Open Sans', sans-serif;font-size: 22px;border-radius: 5px;border: none;padding:8px 25px;margin-right: 50px;margin-left: 20px;">客戶購買資料</button><button class="btn" id="check_inventory" style="background-color: #EAEAEA;color:#786B6B;font-family: 'Open Sans', sans-serif;font-size: 22px;border-radius: 5px;border: none;padding:8px 25px;">存貨追蹤管理</button></div>
+    <div style="width:60%;margin:50px auto;">
+        <div id="bottom" style="margin:80px auto;width:70%;">
+            <table id="example" class="display compact" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>商品名稱</th>
+                        <th>存貨數量</th>
+                        <th>再訂購點</th>
+                        <th>EOQ</th>
+                        <th>訂購</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody1">
+                    <!-- <tr>
+                        <form>
+                        <td>Grandma's Cookies</td>
+                        <td>22</td>
+                        <td>2</td>
+                        <td><input style="margin-left: 10px;"></input><input style="margin-left: 10px;" type="submit"></input></td></form>
+                    </tr>
+                    <tr>
+                        <form>
+                            <td>Grandma's Cookies</td>
+                            <td>22</td>
+                            <td>21</td>
+                            <td><input style="margin-left: 10px;"></input><input style="margin-left: 10px;" type="submit"></input></td></form>
+                    </tr>
+                    <tr>
+                        <form>
+                            <td>Grandma's Cookies</td>
+                            <td>22</td>
+                            <td>20</td>
+                            <td><input style="margin-left: 10px;"></input><input style="margin-left: 10px;" type="submit"></input></td></form>
+                    </tr>
+                    <tr>
+                        <form>
+                            <td>Grandma's Cookies</td>
+                            <td>22</td>
+                            <td>24</td>
+                            <td><input style="margin-left: 10px;"></input><input style="margin-left: 10px;" type="submit"></input></td></form>
+                    </tr> -->
+            </table>
+        </div>    
+</div>
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<script>
+    $('#check_inventory').css('box-shadow', '3px 3px #a0a0a0');
+    $('#customer').click(function() {
+        $(this).css('box-shadow', '3px 3px #a0a0a0');
+        $('#discount').css('box-shadow', '');
+        $('#check_inventory').css('box-shadow', '');
+        window.location.href='/crmPage';
+    });
+    $('#discount').click(function() {
+        $('#customer').css('box-shadow', '');
+        $(this).css('box-shadow', '3px 3px #a0a0a0');
+        $('#check_inventory').css('box-shadow', '');
+        window.location.href="/discountPage";
+    });   
+    $('#check_inventory').click(function() {
+        $('#customer').css('box-shadow', '');
+        $('#discount').css('box-shadow', '');
+        $(this).css('box-shadow', '3px 3px #a0a0a0');
+        window.location.href="/inventoryPage";
+    }); 
+
+    var table = $('#example').DataTable();
+
+    var List1 = {{ productList| safe }};
+    var List2 = {{ purchaseInfo| safe }};
+    var productList = JSON.parse(List1);
+    var purchaseInfo = JSON.parse(List2);
+    var customerName = '';
+    var demandList = [0, 0, 0, 0];
+    var price = 0;
+    var range = '';
+    var H1 = 0;
+    var H2 = 0;
+    var H3 = 0;
+    var Q1 = 0;
+    var Q2 = 0;
+    var Q3 = 0;
+    var S = 500;
+    var highestH = 0;
+    var lowestPoint = 0;
+    var bestQ = 0;
+    var reorderList = [21, 77, 23, 36]
+
+    purchaseInfo.forEach(element => {
+        if (element.ProductID == 10001) {
+            demandList[0] += element.PurchaseQuantity;
+        }else if (element.ProductID == 10002){
+            demandList[1] += element.PurchaseQuantity;
+        }else if (element.ProductID == 10003) {
+            demandList[2] += element.PurchaseQuantity;
+        }else {
+            demandList[3] += element.PurchaseQuantity;
+        }
+    });
+    productList.forEach((element, index) => {
+        price = element.ProductPrice;
+        H1 = price * 0.75 * 0.03;
+        H2 = price * 0.87 * 0.03;
+        H3 = price * 0.95 * 0.03;
+        Q1 = Math.sqrt(2 * demandList[index] * S / H1);
+        //console.log(Q1);
+        Q2 = Math.sqrt(2 * demandList[index] * S / H2);
+        //console.log(Q2);
+        Q3 = Math.sqrt(2 * demandList[index] * S / H3);
+        //console.log(Q3);
+
+        if (Q1 >= 100) {
+            bestQ = Math.ceil(Q1);
+            range = '100 up';
+        }else if (100 > Q2 && Q2 >= 50) {
+            var TC_lowest = Q2 / 2 * H2 + demandList[index] / Q2 * S + price * 0.87;
+            var TC_100 = 100 / 2 * H1 + demandList[index] / 100 * S + price * 0.75;
+            if (TC_lowest < TC_100) {
+                bestQ = Math.ceil(Q2);
+            } else {
+                bestQ = 100;
+            }
+            range = '99 ~ 50';
+            console.log(index+' '+bestQ);
+        }else if (50 > Q3) {
+            var TC_lowest = Q3 / 2 * H3 + demandList[index] / Q3 * S + price * 0.95;
+            var TC_50 = 50 / 2 * H2 + demandList[index] / 50 * S + price * 0.87;
+            if (TC_lowest < TC_50) {
+                bestQ = Math.ceil(Q3);
+            } else {
+                bestQ = 50;
+            }
+            console.log(index + ' ' + bestQ);
+            range = '0 ~ 49';
+        }else {
+        }
+        table.row.add([element.ProductName, element.InventoryAmount, reorderList[index], bestQ,"<form id='form"+element.ProductID+"' action='http://127.0.0.1:8000/product/update-partial/"+element.ProductID+"/' method='POST'><input type='number' style='margin-left: 10px;' name='InventoryAmount' value='amount'></input><input style='margin-left: 10px;' type='submit'></input></td></form>"]).draw();
+        // $('#' + element.ProductID).submit(function () {
+        //     $('#'+ element.ProductID).attr('action', 'http://127.0.0.1:8000/product/update-partial/'+element.ProductID+'/');
+        // });
+        //<input type='hidden' name='_method' value='PATCH'>
+        $("#form"+ element.ProductID).submit(function (e) {
+
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                type: "PATCH",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    alert("更新成功"); // show response from the php script.
+                    location.reload(); 
+                }
+            });
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+        });
+
+    });
+
+    $('td').css('padding', '10px');
+    $('th').css('padding', '10px');
+    $('#logout').click(function() {
+        window.location.href="/logout";
+    });  
+
+    
+
+</script>
+
+</html>

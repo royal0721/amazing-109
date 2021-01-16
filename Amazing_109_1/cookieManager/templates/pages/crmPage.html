@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Amazing 首頁</title>
+    <link href="/cookieManager/stylesheet/pages/index.css" type="text/css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap" rel="stylesheet"></head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">    
+    <body>
+        <body style="overflow-y:scroll;background-color: rgb(250, 250, 250);">
+            <h2 style="position: absolute;left: 60px;
+            top:50px;font-size: 18px;color:whitesmoke;">管理員{{ ctx.username}}已登入</h2>
+            <div class="Amazing_top" style="background: #696969;display: flex;"><h1 style="margin:20px auto;width:10%;font-family: 'Open Sans', sans-serif;color:white;padding:28px;">Amazing</h1></div>
+            <button id="logout" style="background-color: #fff;color:rgb(133, 133, 133);position: absolute;right: 60px;top:50px;width:100px;height: 40px;font-size:18px;cursor: pointer;">登出</button>    <div style="display:flex;margin: 90px auto;width:42%;"><button class="btn" id="customer" style="background-color: #EAEAEA;color:#786B6B;font-family: 'Open Sans', sans-serif;font-size: 22px;border-radius: 5px;border: none;padding:8px 25px;margin-right: 50px;margin-left: 20px;">顧客行銷管理</button><button class="btn" id="discount" style="background-color: #EAEAEA;color:#786B6B;font-family: 'Open Sans', sans-serif;font-size: 22px;border-radius: 5px;border: none;padding:8px 25px;margin-right: 50px;margin-left: 20px;">客戶購買資料</button><button class="btn" id="check_inventory" style="background-color: #EAEAEA;color:#786B6B;font-family: 'Open Sans', sans-serif;font-size: 22px;border-radius: 5px;border: none;padding:8px 25px;">存貨追蹤管理</button></div>
+    <div style="width:60%;margin:50px auto;">
+    <table id="example" class="order-column" style="width:100%">
+        <thead>
+            <tr>
+                <th>顧客 ID</th>
+                <th>顧客名稱</th> 
+                <th>CLV</th>
+                <th>正面評論比例</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+    <div style="color:#696969;font-size: 30px;margin:20px auto;display: block;">整體評論比</div>
+    <canvas id="myChart"style="margin-top:80px;"></canvas>
+    <div style="color:#696969;font-size: 30px;margin:30px auto 10px ;display: block;">網站使用動作相關性</div>
+    {% load static %}
+    <img src="/static/corr.png" style="width:90%;margin:10px auto;">
+    <table id="example2" class="order-column" style="width:100%">
+      <thead>
+          <tr>
+              <th>顧客 ID</th>
+              <th>傾向購買</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>124</th>
+          <th>是</th>
+      </tr>
+      <tr>
+        <th>678</th>
+        <th>是</th>
+    </tr>  
+    <tr>
+    <th>160</th>
+    <th>是</th>
+</tr>
+    <tr>
+      <th>376</th>
+      <th>是</th>
+  </tr>
+<tr>
+  <th>547</th>
+  <th>是</th>
+</tr>
+
+  
+          </tbody>
+  </table>
+<button type="button" onclick="location.href='https://raw.githubusercontent.com/royal0721/cat/main/results.csv'">詳細分析報表</button>
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<script>
+    var List1 = {{ productList| safe }};
+    var List2 = {{ purchaseInfo| safe }};
+    var List3 = {{ customerList | safe }};
+    var productList = JSON.parse(List1);
+    var purchaseInfo = JSON.parse(List2);
+    var customerList = JSON.parse(List3);
+    console.log(customerList);
+    var table = $('#example').DataTable();
+    customerList.forEach(element => {
+        demand = 0;
+        table.row.add([element.CustomerID, element.CustomerName,element.CLV,element.pos_po]).draw();
+        //var dataTable = '<tr><td>' + element.ProductName + '</td ><td>' + element.InventoryAmount + '</td ><td>' + demand + '</td><td><form><input style="margin-left: 10px;"></input><input style="margin-left: 10px;" type="submit"></input></td></form></tr>'
+        //$('#tbody1').append(dataTable)
+    });
+    $('#customer').css('box-shadow', '3px 3px #a0a0a0');
+    $('#customer').click(function() {
+        $(this).css('box-shadow', '3px 3px #a0a0a0');
+        $('#discount').css('box-shadow', '');
+        $('#check_inventory').css('box-shadow', '');
+        window.location.href='/crmPage';
+    });
+    $('#discount').click(function() {
+        $('#customer').css('box-shadow', '');
+        $(this).css('box-shadow', '3px 3px #a0a0a0');
+        $('#check_inventory').css('box-shadow', '');
+        window.location.href="/discountPage";
+    });   
+    $('#check_inventory').click(function() {
+        $('#customer').css('box-shadow', '');
+        $('#discount').css('box-shadow', '');
+        $(this).css('box-shadow', '3px 3px #a0a0a0');
+        window.location.href="/inventoryPage";
+    });          
+    $('#example').DataTable();
+    $('#example2').DataTable();
+    $('#logout').click(function() {
+        window.location.href="/logout";
+    });  
+    var ctx = document.getElementById('myChart');
+
+var myChart = new Chart(ctx, {
+  type: 'pie', //圖表類型
+  data: {
+    //標題
+    labels: ['正面評論', '負面評論'],
+    datasets: [{
+      label: '情感分析評論', //標籤
+      data: [0.5294117647058824,0.47058823529411764], //資料
+      //圖表背景色
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+      ],
+      //圖表外框線色
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+      ],
+      //外框線寬度
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+    }
+  }
+});
+
+</script>
+
+</html>

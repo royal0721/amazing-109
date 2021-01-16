@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>登入</title>
+    </head>
+    <body style="background-color: rgb(238, 238, 238);">
+        <form action="/index/" method="post" style="margin:150px auto;padding:50px;width:20vw;font-size:20px;border:rgb(212, 212, 212) 0.05px solid;justify-content:center;background-color: #fff;border-radius: 10px;box-shadow: 3px 3px rgb(194, 194, 194);">{% csrf_token %}
+            <div style="color:rgb(99, 99, 99);font-size:25px;">Amazing 管理者登入</div>
+            <hr style="margin-bottom: 80px;background-color:rgb(99, 99, 99);">
+            <label for="username">用戶名稱:</label>
+            <input type="text" name="username" value="" id="username"> <br/>
+            <label for="password" >用戶密碼:</label>
+            <input type="password" name="password" value="" id="password"> <br/>
+            <input type="submit" value="登入" style="border-radius: 5px;width:100px;height: 40px;justify-content: center;margin-left: 130px;margin-top: 60px;cursor: pointer;font-size: 16px; " />
+        </form>
+    </body>
+</html>
