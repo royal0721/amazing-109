@@ -16,7 +16,7 @@ class Customer(models.Model):
     CustomerName = models.TextField()  
     Gender = models.TextField()
     pos_po = models.DecimalField(max_digits=19, decimal_places=2)
-    CLV = models.DecimalField(max_digits=19, decimal_places=2)
+    CLV = models.DecimalField(max_digits=19, decimal_places=2, default=0.0)
 
 class MarketingIndex(models.Model):  
     CustomerID = models.IntegerField()
