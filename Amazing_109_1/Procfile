@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath Amazing_109_1 Amazing_109_1.wsgi
+web: gunicorn --pythonpath app app.wsgi
