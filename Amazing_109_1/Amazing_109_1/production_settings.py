@@ -15,6 +15,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers.
 ALLOWED_HOSTS = ['*']
 
+
 # Turn off DEBUG mode.
 LOGGING = {
     'version': 1,
