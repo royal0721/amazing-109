@@ -1,15 +1,10 @@
 from django.db import models
 
-# Create your models here.
-
-
 class Product(models.Model):  
-    ProductID =  models.IntegerField()
     ProductName = models.TextField()  
-    ProductPrice = models.DecimalField(max_digits=19, decimal_places=2, default=0.0)
     InventoryAmount = models.IntegerField()
-
-
+    ProductID =  models.IntegerField()
+    ProductPrice = models.DecimalField(max_digits=19, decimal_places=2, default=0.0)
 
 class Customer(models.Model):
     CustomerID = models.IntegerField()
@@ -33,5 +28,5 @@ class CustomerPurchaseInfo(models.Model):
     PurchasePrice = models.IntegerField() 
     Comment = models.TextField()
     Date = models.IntegerField()
-
+    pos_or_neg = models.DecimalField(max_digits=19, decimal_places=2, default=0.0)
 
