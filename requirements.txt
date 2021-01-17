@@ -116,7 +116,6 @@ sklearn==0.0
 sniffio==1.2.0
 sqlparse==0.4.1
 static3==0.7.0
-systemd-python==234
 terminado==0.9.1
 testpath==0.4.4
 threadpoolctl==2.1.0
