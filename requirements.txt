@@ -15,7 +15,6 @@ click==7.1.2
 contextvars==2.4
 cryptography==2.1.4
 cycler==0.10.0
-dataclasses==0.8
 decorator==4.4.2
 defusedxml==0.6.0
 distlib==0.3.1
